@@ -1,0 +1,24 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vick2015/payment-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vick2015/payment-server/issues"
+  },
+  "homepage": "https://github.com/vick2015/payment-server#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "stripe": "^8.194.0"
+  }
+}

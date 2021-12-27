@@ -7,9 +7,12 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.urlencoded());
 
+app.get('/api/status', async (req, res) => {
+  res.status(200).send("All Good");
+});
 
 
-app.post('api/create-checkout-session', async (req, res) => {
+app.post('/api/create-checkout-session', async (req, res) => {
 
   
   const YOUR_DOMAIN = req.headers.referer;

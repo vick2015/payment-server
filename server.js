@@ -3,7 +3,6 @@
 // Sign in to see your own test API key embedded in code samples.
 const stripe = require('stripe')('sk_test_A0El0fA7E6g21W7QpR5nO578');
 const express = require('express');
-var history = require('connect-history-api-fallback');
 
 const app = express();
 var cors = require('cors')
@@ -11,7 +10,7 @@ var cors = require('cors')
 app.use(express.static('public'));
 app.use(express.urlencoded());
 app.use(cors())
-app.use(history());
+
 
 app.get('/api/status', async (req, res) => {
   res.status(200).send("All Good");

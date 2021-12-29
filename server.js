@@ -48,8 +48,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
       },
     ],
     mode: 'payment',
-    success_url: `${YOUR_DOMAIN}api/success/?session_id={CHECKOUT_SESSION_ID}"`,
-    cancel_url: `${YOUR_DOMAIN}api/error/?session_id={CHECKOUT_SESSION_ID}"`
+    success_url: `${YOUR_DOMAIN}api/success/?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${YOUR_DOMAIN}api/error/?session_id={CHECKOUT_SESSION_ID}`
   });
 
   res.redirect(303, session.url);

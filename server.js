@@ -4,11 +4,21 @@
 const stripe = require('stripe')('sk_test_A0El0fA7E6g21W7QpR5nO578');
 const express = require('express');
 const app = express();
+var cors = require('cors')
+
 app.use(express.static('public'));
 app.use(express.urlencoded());
+app.use(cors())
 
 app.get('/api/status', async (req, res) => {
   res.status(200).send("All Good");
+});
+
+app.get('/api/success', async (req, res) => {
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+  const customer = await stripe.customers.retrieve(session.customer);
+
+  res.send(`<html><body><h1>Thanks for your order, ${customer.name}!</h1></body></html>`);
 });
 
 
@@ -38,8 +48,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
       },
     ],
     mode: 'payment',
-    success_url: `${YOUR_DOMAIN}thankyou`,
-    cancel_url: `${YOUR_DOMAIN}thankyou`,
+    success_url: `${YOUR_DOMAIN}api/success/?session_id={CHECKOUT_SESSION_ID}"`,
+    cancel_url: `${YOUR_DOMAIN}api/error/?session_id={CHECKOUT_SESSION_ID}"`
   });
 
   res.redirect(303, session.url);

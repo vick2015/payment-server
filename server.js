@@ -20,7 +20,7 @@ app.get('/api/success', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
   const customer = await stripe.customers.retrieve(session.customer);
 
-  res.send(`<html><body><h1>Thanks for your order, ${customer.name}!</h1></body></html>`);
+  res.send({session});
 });
 
 
@@ -50,8 +50,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
       },
     ],
     mode: 'payment',
-    success_url: `${YOUR_DOMAIN}api/success/?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${YOUR_DOMAIN}api/error/?session_id={CHECKOUT_SESSION_ID}`
+    success_url: `${YOUR_DOMAIN}thankyou/?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${YOUR_DOMAIN}error/?session_id={CHECKOUT_SESSION_ID}`
   });
 
   res.redirect(303, session.url);

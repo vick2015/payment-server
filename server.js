@@ -18,16 +18,13 @@ app.get('/api/status', async (req, res) => {
 
 app.get('/api/success', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-  const customer = await stripe.customers.retrieve(session.customer);
-
   res.send({session});
 });
 
 
 app.post('/api/create-checkout-session', async (req, res) => {
-
   
-  const YOUR_DOMAIN = req.headers.referer;
+  const YOUR_DOMAIN = req.headers.origin;
   const session = await stripe.checkout.sessions.create({
     customer_email: req.body.customer_email,
     submit_type: 'donate',

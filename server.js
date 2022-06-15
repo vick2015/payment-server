@@ -3,14 +3,35 @@
 // Sign in to see your own test API key embedded in code samples.
 const stripe = require('stripe')('sk_test_A0El0fA7E6g21W7QpR5nO578');
 const express = require('express');
+var cors = require('cors')
+var mysql = require('mysql');
+var con = mysql.createConnection({
+  host: "vwfundraiser.cwutw5rdr7fh.us-west-2.rds.amazonaws.com",
+  user: "admin",
+  password: "r`4mfB}C$WRBJmd^",
+  database: "vwfundraiser"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
+
 
 const app = express();
-var cors = require('cors')
+
 
 app.use(express.static('public'));
 app.use(express.urlencoded());
 app.use(cors())
 
+app.get('/api/products', async (req, res) => {
+  con.query("select * from products", function (err, result) {
+    if (err) throw err;
+    console.log("Result: " + result);
+    res.status(200).send(result);
+  });
+});
 
 app.get('/api/status', async (req, res) => {
   res.status(200).send("All Good");

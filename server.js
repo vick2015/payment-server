@@ -26,6 +26,8 @@ app.use(express.urlencoded());
 app.use(cors())
 
 app.get('/api/products', async (req, res) => {
+
+  
   con.query("select * from products", function (err, result) {
     if (err) throw err;
     console.log("Result: " + result);
@@ -33,13 +35,54 @@ app.get('/api/products', async (req, res) => {
   });
 });
 
+app.get('/api/orders', async (req, res) => {
+  con.query("select * from orders", function (err, result) {
+    if (err) throw err;
+    console.log("Result: " + result);
+    res.status(200).send(result);
+  });
+});
+
+
 app.get('/api/status', async (req, res) => {
   res.status(200).send("All Good");
 });
 
 app.get('/api/success', async (req, res) => {
-  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id , {
+    expand: ['line_items']
+  });
+
+  con.query("select * from orders where orderId = '"+session.payment_intent+"'", function (err, result) {
+    if (err) throw err;
+    console.log(result.length);
+    if(result.length > 0)
+    {
+      
+      res.send("undefined");
+       return;
+    }
+
+    console.log("hello");
+var date_ob = new Date();
+var day = ("0" + date_ob.getDate()).slice(-2);
+var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+var year = date_ob.getFullYear();
+var hours = date_ob.getHours();
+var minutes = date_ob.getMinutes();
+var seconds = date_ob.getSeconds();
+  
+var dateTime = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+
+  var sql = "INSERT INTO `vwfundraiser`.`orders`(`orderId`,`customer`,`productname`, `orderDate`,`amount`,`payment`,`status`) VALUES \
+  ('"+session.payment_intent+"','"+session.customer+"','"+session.line_items.data[0].description+"' , '"+dateTime+"', '"+session.amount_total+"','"+session.payment_method_types[0]+"', '"+session.payment_status+"');";
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record inserted");
+  });
   res.send({session});
+  });
+ 
 });
 
 
